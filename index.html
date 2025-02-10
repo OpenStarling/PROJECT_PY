@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приветствие | Трехфазный сепаратор</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0E1117;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            animation: slideDown 1s ease-in-out;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0 30px;
+            color: #bbb;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            background: #FF4B4B;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s ease-in-out;
+            animation: fadeIn 2.5s ease-in-out;
+            box-shadow: 0px 4px 8px rgba(255, 75, 75, 0.3);
+        }
+
+        .btn:hover {
+            background: #E03E3E;
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(255, 75, 75, 0.6);
+        }
+
+        .image-container {
+            position: fixed;
+            bottom: -2px;
+            right: -5px;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        .image-container img {
+            width: 400px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Фоновая анимация частиц */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="particles"></canvas>
+    <div class="container">
+        <h1>Добро пожаловать!</h1>
+        <p>Визуализация расчётов трёхфазного сепаратора.</p>
+        <a href="http://localhost:8502" class="btn">Перейти к расчётам</a>
+    </div>
+    <div class="image-container">
+        <img src="https://i.postimg.cc/Jh3FF92W/Picsart-25-01-30-21-11-00-250.png" alt="Фото">
+    </div>
+
+    <script>
+        // Анимация частиц
+        const canvas = document.querySelector('.particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particlesArray = [];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) {
+                    this.speedX *= -1;
+                }
+                if (this.y < 0 || this.y > canvas.height) {
+                    this.speedY *= -1;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            for (let i = 0; i < 100; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+    </script>
+</body>
+</html>
