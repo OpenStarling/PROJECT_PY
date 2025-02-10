@@ -1,12 +1,13 @@
 import streamlit as st
+
+# ✅ Должно быть первой командой
+st.set_page_config(page_title="Трехфазный сепаратор", layout="wide")
+
 import subprocess
 import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
 import time
-
-# Настройки страницы
-st.set_page_config(page_title="Трехфазный сепаратор", layout="wide")
 
 st.title("🔬 Визуализация расчётов трехфазного сепаратора")
 
