@@ -68,14 +68,4 @@ if st.sidebar.button("🚀 Start Calculation"):
         font=dict(color='white')
     )
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Visualization of Cd vs. Re Graph (Reduced Size, Matching Background, and White-Blue Labels)
-    fig, ax = plt.subplots(figsize=(4, 3))  # Reduced size
-    fig.patch.set_facecolor('#0E1117')  # Background matches the container
-    ax.set_facecolor('#0E1117')  # Background of axes
-    ax.plot([1, 2, 3], [1, 4, 9], marker='o', linestyle='-', color='b', label='Example')
-    ax.set_xlabel("Re", color='white')
-    ax.set_ylabel("Cd", color='white')
-    ax.tick_params(colors='white')
-    ax.legend(facecolor='#1B1F2A', edgecolor='white', labelcolor='white')
-    st.pyplot(fig)
+
