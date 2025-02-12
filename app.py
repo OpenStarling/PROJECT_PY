@@ -8,9 +8,9 @@ import time
 # Page settings
 st.set_page_config(page_title="Three-Phase Separator", layout="wide")
 
-st.title("🔬 Visualization of Three-Phase Separator Calculations")
+st.title("Separator sizing & 3D visualisation")
 
-st.sidebar.header("🔧 Input Data")
+st.sidebar.header(" Input Data")
 
 # Input data through the interface
 inputs = {
