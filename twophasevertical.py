@@ -1,23 +1,19 @@
 print("Droplet removal size of liquid in the gas phase (microns):")
 dm_liquid = float(input())
- 
-print("Droplet removal size of oil in the water phase (microns):")
-dm_oil = float(input())
-
-print("Droplet removal size of water in the oil phase (microns):")
-dm_water = float(input())
+# dm_liquid = 140
 
 print("oil density (lb/ft^3): ")
 oil_density = float(input())
-
+# oil_density = 54.67
 print("Pressure (psia):")
 p = float(input())
-
+# p = 1000
 print("Temperature (ͦR):")
 t = float(input())
-
+# t = 600
 print("SG of gas:")
 SGgas = float(input())
+# SGgas = 0.6
 
 TemperatureList = [-100, 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 PList = [0, 250, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000, 4250, 4500, 4750, 5000]
@@ -46,6 +42,8 @@ for i in range(12):
 print("Viscosity of gas = ", ViscosityList[j], "cp")
 
 miu = ViscosityList[j]
+
+
 if(SGgas == 0.55):
     if(t == -100):
         ZfactorList = [1.020, 0.89, 0.75, 0.59, 'not defined', 'not defined', 'not defined', 0.42, 0.46, 0.5, 0.54, 0.57, 0.63, 0.67, 0.72, 0.75, 0.78, 0.83, 0.86, 0.89, 0.93]
@@ -225,7 +223,6 @@ for i in range(21):
     if PList[i]==p:
         k=i
 
-
 Zfactor = ZfactorList[k]
 print("Zfactor = ", Zfactor)
 
@@ -235,9 +232,10 @@ rg = 2.7 * SGgas * p / (t*Zfactor)
 
 print("gas density = ", rg, "lb/ft^3")
 
+
 Cd = 0.34
 
-Vt = 0.0119 *((((rl - rg) * dm_liquid)/(rg*Cd)) ** 0.5) 
+Vt = 0.0119 *((((rl - rg) * dm_liquid)/(rg*Cd)) ** 0.5)
 
 print("Vt = ", Vt, "ft/s")
 
@@ -281,85 +279,66 @@ plt.grid(True)  # Включаем сетку
 # Отображаем график
 plt.show()
 
-print("Gas Flowrate(MMscfd): ")
-Qg = float(input())
+#print("Gas Flowrate(MMscfd): ")
+#Qg = float(input())
+Qg = 6.6
 
 d_squared_gas_phase = 5040 * ((t * Zfactor * Qg) / p) *( ( rg * Cd / ((rl - rg) * dm_liquid)) ** 0.5)
+d = d_squared_gas_phase ** 0.5
 
 print("d_squared_gas_phase = ", d_squared_gas_phase, "inch^2")
-print("diametr_gas_phase = ", d_squared_gas_phase**0.5, "inch")
+print("d = ", d_squared_gas_phase**0.5, "inch")
 
-print("SG oil: ")
-SG_o = float(input())
+print("retention time(minutes):")
+tr = float(input())
 
-print("SG water: ")
-SG_w = float(input())
+#print("SG oil: ")
+#SG_o = float(input())
+SG_o = 0.867
+
+#print("SG water: ")
+#SG_w = float(input())
+SG_w = 1.07
 
 delta_SG = SG_w - SG_o
 
-print("Oil flowrate(BOPD):")
-Qoil = int(input())
+#print("Oil flowrate(BOPD):")
+#Qoil = int(input())
+Qoil = 5000
 
-print("Oil viscosity(cp):")
-miuoil = int(input())
+#print("Water flowrate(BWPD):")
+#Qwater = float(input())
+Qwater = 6000
 
-d_squared_oil_phase = 6690 * ((Qoil * miuoil) / (delta_SG * (dm_water**2)))
-print("d_squared_oil_phase= ", d_squared_oil_phase, "inch^2")
-print("d_oil_phase= ", d_squared_oil_phase**0.5, "inch")
+d_squaredh = tr * (Qoil + Qwater)/0.12
+print("d_squaredh = ", d_squaredh)
+print("h first = ", d_squaredh/d_squared_gas_phase)
 
-print("Water flowrate(BWPD):")
-Qwater = float(input())
-
-print("Viscosity of water(cp):")
-miuwater = float(input())
-
-d_squared_water_phase = 6690 * ((Qwater * miuwater) / (delta_SG * (dm_oil**2)))
-print("d_squared_water_phase = ", d_squared_water_phase, "inch^2")
-print("d_water_phase = ", d_squared_water_phase**0.5, "inch")
-
-d_max = max(d_squared_water_phase**0.5, d_squared_oil_phase**0.5, d_squared_gas_phase**0.5)
-print("d_max = ", d_max, "inch")
-d = d_max
-
-hList = [((10 * Qoil)+(10*Qwater))/(0.12*(d**2))]
+hList = [d_squaredh/d**2]
 dList = [d]
-for i in range(1, 20):
+LssList = []
+SRList = []
+for i in range(1, 50):
+    if d < 36:
+        Lss = ((d_squaredh/d**2) + 76) / 12
+    else:
+        Lss = ((d_squaredh/d**2) + d + 40)/12
+    LssList.append(Lss)
+    SRList.append(12*Lss/d)
+    #print("SR = ", 12*Lss/d, end = " ")
     d = d + 1
     dList.append(d)
-    hList.append(((10 * Qoil)+(10*Qwater))/(0.12*(d**2)))
-    
-#for i in range(20):
-#   print(hList[i], end = ' ')
-#for i in range(20):
-#   print(dList[i], end = ' ')
-    
-Lss = []
-for i in range(20):
-    Lss.append((hList[i]+dList[i]+40)/(12))
-    
-#for i in range(20):
-#  print(Lss[i], end = ' ')
+    hList.append(d_squaredh/(d**2))
 
-SRList = []
-for i in range(20):
-    SRList.append((12*Lss[i])/(dList[i]))
-
-#for i in range(20):
-# print(SRList[i], end = ' ')
-
-for i in range(20):
-    if 1.5<SRList[i]<3:
-        g = i
-        print("SR first = ", SRList[i])
+for i in range(50):
+    if 3 < SRList[i] < 3.1:
+        f = i
         break
         
-ELeses = Lss[g]
-h = hList[g]
-d0 = dList[g]
+print("Lss = ", LssList[f], "ft")
+print("h = ", hList[f], "inches")
+print("d = ", dList[f], "inches")
 
-print("Lss = ", ELeses, "ft")
-print("Leff = ", h, "inch")
-print("d0= ", d0, "inch")
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -367,8 +346,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from stl import mesh
 
 # Исходные размеры цилиндра
-length_ft = ELeses  # Длина цилиндра в футах
-diameter_inch = d0  # Диаметр цилиндра в дюймах
+length_ft = LssList[f]  # Длина цилиндра в футах
+diameter_inch = dList[f] # Диаметр цилиндра в дюймах
 
 # Переводим диаметр в футы
 diameter_ft = diameter_inch / 12  # 1 фут = 12 дюймов
@@ -434,3 +413,5 @@ for i, face in enumerate(faces):
 # Сохраняем STL-файл
 cylinder_mesh.save('cylinder_fixed.stl')
 print("STL файл 'cylinder_fixed.stl' успешно создан!")
+
+
