@@ -1,7 +1,0 @@
-dm_liquid: 100.0
-dm_oil: 200.0
-dm_water: 500.0
-oil_density: 54.67
-p: 1000.0
-t: 600.0
-SGgas: 0.55
